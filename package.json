@@ -7,7 +7,7 @@
     "start": "node nodeify.js"
   },
   "engines": {
-    "node": "6.3.2"
+    "node": "6.3.0"
   },
   "author": "",
   "license": "ISC",
