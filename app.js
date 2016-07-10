@@ -1,10 +1,10 @@
-// const nodeify = require('./nodeify');
+const nodeify = require('./nodeify');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', function() {
-  //call nodeify
+  nodeify();
   console.log('ran nodify');
 });
 
