@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node nodeify.js"
   },
+  "engines": {
+    "node": "6.3.2"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
