@@ -1,7 +1,8 @@
 var request = require('request');
 let cheerio = require('cheerio');
 let moment = require('moment');
-let slackWebhook = 'https://hooks.slack.com/services/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';
+let slackWebhook = process.env.SLACK_WEB_HOOK;
+console.log('slackWebhook ', slackWebhook);
 let slack = require('slack-notify')(slackWebhook);
 
 request('http://nodeschool.io/sanfrancisco/', function (error, response, body) {
