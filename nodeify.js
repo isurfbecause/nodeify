@@ -36,7 +36,7 @@ module.exports = () => {
 
           if (newDate > todaysDate){
             slack.send({
-              channel: '@phil',
+              channel: '#events',
               icon_url: 'http://nodeschool.io/sanfrancisco/assets/logo.png',
               text: sfnsURL[0],
               unfurl_links: true,
@@ -73,7 +73,7 @@ module.exports = () => {
 
           if (newDate > todaysDate){
             slack.send({
-              channel: '@phil',
+              channel: '#events',
               icon_url: 'http://nodeschool.io/oakland/images/nodeschool_oak.png',
               text: oaknsURL[0],
               unfurl_links: true,
