@@ -1,54 +1,123 @@
-var request = require('request');
+let request = require('request');
 let cheerio = require('cheerio');
 let moment = require('moment');
 let slackWebhook = process.env.SLACK_WEB_HOOK;
 let slack = require('slack-notify')(slackWebhook);
 
-request('http://nodeschool.io/sanfrancisco/', function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-    let $ = cheerio.load(body);
-    let nodeschoolFullDate = $('h2').text().split(' ');
-    let month = moment().month(nodeschoolFullDate[0]).format('M');
-    console.log(month);
-    let date = nodeschoolFullDate[1].match(/\d/gi).join('');
-    console.log(+date);
-    let year = nodeschoolFullDate[2];
-    console.log(+year);
-    let newDate =  new Date(`${month}/${date}/${year}`).getTime();
-    console.log(newDate);
+let nodeifier = () => {
 
-    let todaysDate = new Date().getTime();
+  let nodeschoolURLs = ['http://nodeschool.io/sanfrancisco/', 'http://nodeschool.io/oakland/'];
 
-    let nsURL = [];
+  nodeschoolURLs.forEach((url) => {
+    if (url.includes('sanfrancisco')){
+      request(url, (error, response, body) => {
+        if (!error && response.statusCode === 200){
+          let $ = cheerio.load(body);
+          let nodeschoolFullDate = $('h2').text().split(' ');
+          let month = moment().month(nodeschoolFullDate[0]).format('M');
+          let date = nodeschoolFullDate[1].match(/\d/gi).join('');
+          let year = nodeschoolFullDate[2];
+          let newDate = new Date(`${month}/${date}/${year}`).getTime();
+          let todaysDate = new Date().getTime();
 
-    let urls = $('a');
-    for (var key in urls) {
-      if( urls.hasOwnProperty( key ) ) {
-        // let url = urls[key].attribs;
-        // console.log(typeof url);
-        // console.log(urls[key]);
-        if (urls[key].type === 'tag'){
-          // let matcher = urls[key].attribs.href.match(/(ti.to\/nodeschool)/gi);
-          let matcher = urls[key].attribs.href.includes('ti.to');
-          if (matcher) {
-            nsURL.push(urls[key].attribs.href);
+          let sfnsURL = [];
+          let sfURLS = $('a');
+
+          for (let key in sfURLS){
+            if (sfURLS.hasOwnProperty(key)){
+              if (sfURLS[key].type === 'tag'){
+                let urlMatcher = sfURLS[key].attribs.href.includes('ti.to');
+                if (urlMatcher){
+                  sfnsURL.push(sfURLS[key].attribs.href);
+                }
+              }
+            }
+          }
+
+          if (newDate > todaysDate){
+            slack.send({
+              channel: '@phil',
+              icon_url: 'http://nodeschool.io/sanfrancisco/assets/logo.png',
+              text: sfnsURL[0],
+              unfurl_links: true,
+              username: 'SF Nodeifier'
+            });
+
           }
         }
-      }
-    }
-    // console.log(urls);
-    // urls.filter((url) => {
-    //   console.log(url.attribs);
-    // });
-
-    if (newDate > todaysDate){
-      slack.send({
-        channel: '@winston',
-        icon_url: 'http://nodeschool.io/sanfrancisco/assets/logo.png',
-        text: nsURL[0],
-        unfurl_links: true,
-        username: 'SF Nodeifier'
+      });
+    } else {
+      request(url, (error, response, body) => {
+        if (!error && response.statusCode === 200){
+          let $ = cheerio.load(body);
+          let nodeschoolFullDate = $('.event__datetime');
+        }
       });
     }
-  }
-});
+  });
+};
+
+nodeifier();
+
+
+
+
+// let sfNode() => {
+//
+//   request('http://nodeschool.io/sanfrancisco/', function (error, response, body) {
+//     if (!error && response.statusCode == 200) {
+//       let $ = cheerio.load(body);
+//       let nodeschoolFullDate = $('h2').text().split(' ');
+//       let month = moment().month(nodeschoolFullDate[0]).format('M');
+//       let date = nodeschoolFullDate[1].match(/\d/gi).join('');
+//       let year = nodeschoolFullDate[2];
+//       let newDate =  new Date(`${month}/${date}/${year}`).getTime();
+//
+//       let todaysDate = new Date().getTime();
+//
+//       let sfnsURL = [];
+//       let sfurls = $('a');
+//
+//       for (var key in sfurls) {
+//         if( urls.hasOwnProperty( key ) ) {
+//           // let url = urls[key].attribs;
+//           // console.log(typeof url);
+//           // console.log(urls[key]);
+//           if (sfurls[key].type === 'tag'){
+//             // let matcher = urls[key].attribs.href.match(/(ti.to\/nodeschool)/gi);
+//             let matcher = sfurls[key].attribs.href.includes('ti.to');
+//             if (matcher) {
+//               sfnsURL.push(sfurls[key].attribs.href);
+//             }
+//           }
+//         }
+//       }
+//
+//
+//       if (newDate > todaysDate){
+//         slack.send({
+//           channel: '@phil',
+          // icon_url: 'http://nodeschool.io/sanfrancisco/assets/logo.png',
+          // text: nsURL[0],
+          // unfurl_links: true,
+          // username: 'SF Nodeifier'
+//         });
+//       }
+//     }
+//   });
+//
+// };
+//
+// let oakNode() => {
+//
+//   request('http://nodeschool.io/oakland/', function(error, response, body){
+//     if (!error && response.statusCode === 200) {
+//       let $ = cheerio.load(body);
+//       let nodeschoolFullDate = $('.event__datetime')
+//     }
+//   });
+//   let oaknsURL = [];
+//
+//   let oakurls = $('a');
+//
+// };
