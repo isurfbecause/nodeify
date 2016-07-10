@@ -4,7 +4,7 @@
   "description": "",
   "main": "nodeify.js",
   "scripts": {
-    "start": "node nodeify.js"
+    "start": "node app.js"
   },
   "engines": {
     "node": "6.3.0"
