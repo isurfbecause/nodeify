@@ -47,7 +47,7 @@ module.exports = () => {
           // console.log(newDate);
           if (sent['sanfrancisco'] !== newDate.toString()){
               slack.send({
-                channel: '@winston',
+                channel: '#events',
                 icon_url: 'http://nodeschool.io/sanfrancisco/assets/logo.png',
                 text: sfnsURL[0],
                 unfurl_links: true,
@@ -90,7 +90,7 @@ module.exports = () => {
 
           if (sent['oakland'] !== newDate.toString()){
             slack.send({
-              channel: '@winston',
+              channel: '#events',
               icon_url: 'http://nodeschool.io/oakland/images/nodeschool_oak.png',
               text: oaknsURL[0],
               unfurl_links: true,
